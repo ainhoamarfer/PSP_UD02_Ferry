@@ -26,18 +26,20 @@ public class Muelle {
     }
 
     // la carretera deja un vehículo y avisas a quien esté esperando
-    // decide si este método tiene que ser synchronized
-    public void agregarVehiculo(int v) {
+    // decide si este métod tiene que ser synchronized
+    public synchronized void agregarVehiculo(int v) {
         // ======================= COMPLETAR =======================
         // añades el vehículo al buffer
         // despiertas a los hilos que esten esperando en este monitor (notifyAll)
         // =========================================================
-        throw new UnsupportedOperationException("agregarVehiculo: sin implementar");
+
+        buffer.add(v);
+        buffer.notify();
     }
 
     // el ferry pide un vehículo que quepa en su hueco; si no hay ninguno, esperas
-    // decide si este método tiene que ser synchronized
-    public int embarcar(int hueco) throws InterruptedException {
+    // decide si este métod tiene que ser synchronized
+    public synchronized int embarcar(int hueco) throws InterruptedException {
         // ======================= COMPLETAR =======================
         // usas buscarQueQuepa(hueco) para saber si hay algo que quepa (-1 si no)
         // si no hay nada que quepa, esperas con wait()
@@ -45,11 +47,20 @@ public class Muelle {
         // cuando haya uno, lo quitas del buffer con buffer.remove(Integer.valueOf(v))
         // devuelves el vehículo embarcado
         // =========================================================
-        throw new UnsupportedOperationException("embarcar: sin implementar");
+        int v = buscarQueQuepa(hueco);
+        while (v == -1) {
+            buffer.wait();
+            v = buscarQueQuepa(hueco);
+        }
+
+        if (buffer.contains(v)) {
+            buffer.remove(Integer.valueOf(v));
+        }
+        return v;
     }
 
     // buscas el vehículo más grande que quepa en el hueco; -1 si no hay ninguno
-    // ojo: este método no es synchronized; piensa desde dónde lo llamas
+    // ojo: este métod no es synchronized; piensa desde dónde lo llamas
     private int buscarQueQuepa(int hueco) {
         for (int tipo = 5; tipo >= 1; tipo--) {
             if (tipo <= hueco && buffer.contains(tipo)) {

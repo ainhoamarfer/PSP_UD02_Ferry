@@ -11,8 +11,8 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
 
         // creo los muelles, uno para cada orilla
-        Muelle muelleNorte = new Muelle("Norte");
-        Muelle muelleSur = new Muelle("Sur");
+        Muelle muelleNorte = new Muelle("Muelle Norte");
+        Muelle muelleSur = new Muelle("Muelle Sur");
 
         //creo las carreteras, una para cada orilla
         Carretera carreteraNorte = new Carretera("CARRETERA_NORTE", muelleNorte, 1, 3);
@@ -34,6 +34,7 @@ public class Main {
 
         // join porque para que el hilo principal espere hasta que el hilo del ferry termine.
         ferry.join();
+
         //este mensaje aparece cuando ferry.join haya terminado.
         System.out.println("El ferry ha terminado su servicio.");
     }

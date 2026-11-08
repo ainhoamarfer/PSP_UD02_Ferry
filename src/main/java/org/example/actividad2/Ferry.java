@@ -23,7 +23,7 @@ public class Ferry extends Thread {
     private int espacioLibre;
 
     //añado al constructor los nuevos parámetros para poder pasarle los dos muelles
-    public Ferry(String nombre, Muelle muelleOrigen, Muelle muelleDestino, boolean estaEnOrigen,  String destino, int capacidad, int viajes, int tiempoTrayecto) {
+    public Ferry(String nombre, Muelle muelleOrigen, Muelle muelleDestino, boolean estaEnOrigen, String destino, int capacidad, int viajes, int tiempoTrayecto) {
         super(nombre);
         this.muelleOrigen = muelleOrigen;
         this.muelleDestino = muelleDestino;
@@ -55,12 +55,15 @@ public class Ferry extends Thread {
 
                 navegar(muelleActual.getNombre(), muelleSiguiente.getNombre());
 
-                descargar();
+                // Descargamos en el muelle al que acabamos de llegar
+                descargar(muelleSiguiente);
 
                 // Cambio la posición del ferry
-                estaEnOrigen = false;
-
-                navegar(destino, muelleActual.getNombre());
+                if (estaEnOrigen) {
+                    estaEnOrigen = false;
+                } else {
+                    estaEnOrigen = true;
+                }
 
             }
             log("fin de servicio, has hecho " + viajes + " viajes");
@@ -70,6 +73,7 @@ public class Ferry extends Thread {
     }
 
     // cargas hasta llenarte; si no cabe nada, el muelle te deja dormido hasta que llegue algo
+    //aquile paso el muelle en el que esta
     private void cargar(Muelle muelleDondeEstas) throws InterruptedException {
 
         while (espacioLibre > 0) {
@@ -90,17 +94,13 @@ public class Ferry extends Thread {
     }
 
     // vacías el ferry en destino: los vehículos salen de la simulación
-    private void descargar() {
+    //aquile paso el muelle en el que esta
+    private void descargar(Muelle muelleDondeDescargar) {
         while (!cargados.isEmpty()) {
             int v = cargados.remove(0);
             espacioLibre += v;
 
-            //cambio aqui dependiendo de donde este el ferry, para que sepa si esta descargando en el muelle de origen o en el muelle de destino
-            if (estaEnOrigen) {
-                log("descarga " + Carretera.nombreVehiculo(v) + " en " + muelleOrigen.getNombre());
-            } else {
-                log("descarga " + Carretera.nombreVehiculo(v) + " en " + muelleDestino.getNombre());
-            }
+            log("descarga " + Carretera.nombreVehiculo(v) + " en " + muelleDondeDescargar.getNombre());
         }
     }
 

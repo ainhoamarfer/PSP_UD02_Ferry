@@ -1,8 +1,9 @@
-package org.example;
+package org.example.actividad1;
 /**
  *
  * @author PON_TU_NOMBRE_COMPLETO_AQUÍ
  */
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class Muelle {
         // =========================================================
 
         buffer.add(v);
-        buffer.notify();
+        notifyAll();
     }
 
     // el ferry pide un vehículo que quepa en su hueco; si no hay ninguno, esperas
@@ -47,15 +48,17 @@ public class Muelle {
         // cuando haya uno, lo quitas del buffer con buffer.remove(Integer.valueOf(v))
         // devuelves el vehículo embarcado
         // =========================================================
+
         int v = buscarQueQuepa(hueco);
+
+        //uso while porque comprueba la condición repetidamente hasta que deja de cumplirse.
         while (v == -1) {
-            buffer.wait();
+           wait();
             v = buscarQueQuepa(hueco);
         }
 
-        if (buffer.contains(v)) {
-            buffer.remove(Integer.valueOf(v));
-        }
+        buffer.remove(Integer.valueOf(v));
+
         return v;
     }
 

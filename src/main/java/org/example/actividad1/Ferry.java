@@ -1,4 +1,4 @@
-package org.example;
+package org.example.actividad1;
 /**
  *
  * @author PON_TU_NOMBRE_COMPLETO_AQUÍ

@@ -1,7 +1,7 @@
-package org.example;
+package org.example.actividad1;
 /**
  *
- * @author PON_TU_NOMBRE_COMPLETO_AQUÍ
+ * @author Ainhoa Martínez Fernández
  *
  * Ejercicio 1) Se trata de implementar un modelo de carretera/muelle/ferry, que funciona así:
  *
@@ -16,6 +16,12 @@ package org.example;
  */
 public class Main {
 
+    /**
+     * Como yo lo entiendo
+     * Empiezo por el muelle que es el recurso compartido, con un buffer de tamaño fijo y métodos synchronized para añadir y quitar vehículos.
+     * Luego la carretera es el productor, que genera vehículos y los añade al muelle.
+     * por ultimo el consumidor, el ferry, que intenta coger vehículos del muelle hasta llenarse y luego vacía en la otra orilla.
+     */
     public static void main(String[] args) throws InterruptedException {
         // ======================= COMPLETAR =======================
         // creas el muelle: new Muelle("Norte")
@@ -26,16 +32,27 @@ public class Main {
         // esperas a que termine el ferry (join) y muestras un mensaje final
         // =========================================================
 
+        // creo el muelle
         Muelle muelle = new Muelle("Norte");
+
+        //creo el productor, le doy el muelle que acabo de crear
         Carretera carretera = new Carretera("CARRETERA", muelle, 1, 3);
+
+        // creo el consumidor
         Ferry ferry = new Ferry("FERRY", muelle, "Sur", 20, 3, 3);
 
+        //haces la carretera daemon (setDaemon), para cuando el ferry termine sus tres viajes, el programa pueda finalizar
+        // aunque la carretera siga generando vehículos
         carretera.setDaemon(true);
 
+        //inicio los hilos
         carretera.start();
         ferry.start();
 
+        // join porque para que el hilo principal espere hasta que el hilo del ferry termine.
         ferry.join();
-        System.out.println("El ferry ha terminado su viaje.");
+        //este mensaje aparece cuando ferry.join haya terminado.
+        System.out.println("El ferry ha terminado su servicio.");
     }
 }
+
